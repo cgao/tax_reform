@@ -44,13 +44,24 @@ def AMT_bracket(taxable_income, joint = True):
     return tax_calculator(taxable_income, bracket, rate) 
 
 #2. 增加标准扣除(Standard Deduction)额度
+'''
+    if joint:
+        old_standard_deduction = 12600
+        new_standard_deduction = 24000
+    else:
+        old_standard_deduction = 6300
+        new_standard_deduction = 12000
+'''
 
 #3. 减少利息扣除
 def MTG_IR_deduction_old(UPB, rate):
-    return UPB*rate
-
-def MTG_IR_deduction_new(UPB, rate):
-    return min(500000.0, UPB)*rate
+    return min(1000000.0, UPB)*rate
+# existing_mtg = True: existing loan. Grand fathered 1.0 Million limit
+def MTG_IR_deduction_new(UPB, rate, existing_mtg = False):
+    if existing_mtg:
+        return min(1000000.0, UPB)*rate
+    else:
+        return min(750000.0, UPB)*rate
 
 #4. 减少州与地方税收(房产税等)扣除
 def SALT_deduction_old(taxable_income, efficient_state_rate, local_tax):
@@ -99,7 +110,7 @@ def AMT_exemption(taxable_income, joint = True):
 #8. 逐步取消遗产税 (Estate Tax)
 
 #9. 综合影响
-def tax_comparison(taxable_income, member, child, UPB, rate, efficient_state_rate, local_tax, joint = True, display = True, detail = False):
+def tax_comparison(taxable_income, member, child, UPB, rate, efficient_state_rate, local_tax, joint = True, existing_mtg = False, display = True, detail = False):
 # Personal exemption (applied to both standard and itemized)
     old_PersonalExemption_deduction = PersonalExemption_deduction_old(taxable_income, member, joint = joint)
 # Child care tax credit (applied to both standard and itemized)
@@ -107,7 +118,7 @@ def tax_comparison(taxable_income, member, child, UPB, rate, efficient_state_rat
     new_ChildCare_Credit = ChildCare_Credit_new(taxable_income, child, joint = joint)
 # Mortgage Interest Rate deduction (applied to itemized and AMT)
     old_MTG_IR_deduction= MTG_IR_deduction_old(UPB, rate)
-    new_MTG_IR_deduction= MTG_IR_deduction_new(UPB, rate)
+    new_MTG_IR_deduction= MTG_IR_deduction_new(UPB, rate, existing_mtg = existing_mtg)
 # State and local tax (applied to itemized only)
     old_SALT_deduction = SALT_deduction_old(taxable_income, efficient_state_rate, local_tax)       
     new_SALT_deduction = SALT_deduction_new(taxable_income, efficient_state_rate, local_tax)
@@ -151,7 +162,7 @@ def tax_comparison(taxable_income, member, child, UPB, rate, efficient_state_rat
         print("***********************************************")
         print("${:,} taxable income".format(taxable_income) + ', joint = %r'%joint)
         print("%d Family Member, %d child(ren)"%(member, child))
-        print('${:,} Mortgage Balance'.format(UPB) + ', %3.2f%% Interest Rate'%(rate*100),)
+        print('Existing Mortgage: %r'%existing_mtg + ', ${:,} Mortgage Balance'.format(UPB) + ', %3.2f%% Interest Rate'%(rate*100),)
         print('${:,} Local Tax'.format(local_tax) + ', %d%% State/City Tax Rate'%(efficient_state_rate*100),)
         print("***********************************************")
         table = BeautifulTable()

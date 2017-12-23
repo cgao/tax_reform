@@ -21,10 +21,11 @@ def comparison_curve(
         rate = 0.0275,
         efficient_state_rate = 0.05,
         local_tax = 16500,
-        joint = True
+        joint = True,
+        existing_mtg = False
         ):
     taxable_incomes = [income_interval*x for x in range(int(income_low/income_interval), int(income_high/income_interval)+1)]
-    taxes = [tax_reform.tax_comparison(taxable_income, family_size, children, UPB, rate, efficient_state_rate, local_tax, joint = joint, display = False)  for taxable_income in taxable_incomes]
+    taxes = [tax_reform.tax_comparison(taxable_income, family_size, children, UPB, rate, efficient_state_rate, local_tax, joint = joint, existing_mtg = existing_mtg, display = False)  for taxable_income in taxable_incomes]
     taxes_old = [x[0] for x in taxes]
     taxes_new = [x[1] for x in taxes]
     tax_reductions = [x[0] - x[1] for x in taxes]
@@ -50,11 +51,15 @@ def comparison_curve(
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
-    ax.text(0.05, 0.75, 'UPB = ${:,}'.format(UPB) + '; Rate = %3.2f%%'%(rate*100),
+    ax.text(0.05, 0.75, 'Existing Mortgage = %r'%existing_mtg + '; UPB = ${:,}'.format(UPB) + '; Rate = %3.2f%%'%(rate*100),
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
     ax.text(0.05, 0.70, 'State Rate = %3.2f%%'%(efficient_state_rate*100) + '; Local Tax = ${:,}'.format(local_tax),
+            verticalalignment='bottom', horizontalalignment='left',
+            transform=ax.transAxes,
+            color='red', fontsize=10)
+    ax.text(0.05, 0.65, 'Joint = %s'%(joint),
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
@@ -73,10 +78,11 @@ def AMT_planning(
         rate = 0.0275,
         efficient_state_rate = 0.05,
         local_tax = 16500,
-        joint = True
+        joint = True,
+        existing_mtg = False
         ):
     taxable_incomes = [income_interval*x for x in range(int(income_low/income_interval), int(income_high/income_interval)+1)]
-    taxes = [tax_reform.tax_comparison(taxable_income, family_size, children, UPB, rate, efficient_state_rate, local_tax, joint = joint, display = False)  for taxable_income in taxable_incomes]
+    taxes = [tax_reform.tax_comparison(taxable_income, family_size, children, UPB, rate, efficient_state_rate, local_tax, joint = joint, existing_mtg = existing_mtg, display = False)  for taxable_income in taxable_incomes]
     #  return [tax_old, tax_new, old_tax_standard, new_tax_standard, old_tax_itemized, new_tax_itemized, old_tax_AMT]
     old_tax = [x[0] for x in taxes]
     old_tax_standard = [x[2] for x in taxes]
@@ -99,11 +105,15 @@ def AMT_planning(
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
-    ax.text(0.05, 0.55, 'UPB = ${:,}'.format(UPB) + '; Rate = %3.2f%%'%(rate*100),
+    ax.text(0.05, 0.55, 'Existing Mortgage = %r'%existing_mtg + '; UPB = ${:,}'.format(UPB) + '; Rate = %3.2f%%'%(rate*100),
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
     ax.text(0.05, 0.50, 'State Rate = %3.2f%%'%(efficient_state_rate*100) + '; Local Tax = ${:,}'.format(local_tax),
+            verticalalignment='bottom', horizontalalignment='left',
+            transform=ax.transAxes,
+            color='red', fontsize=10)
+    ax.text(0.05, 0.65, 'Joint = %s'%(joint),
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
@@ -121,11 +131,15 @@ def AMT_planning(
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
-    ax.text(0.05, 0.75, 'UPB = ${:,}'.format(UPB) + '; Rate = %3.2f%%'%(rate*100),
+    ax.text(0.05, 0.75, 'Existing Mortgage = %r'%existing_mtg + '; UPB = ${:,}'.format(UPB) + '; Rate = %3.2f%%'%(rate*100),
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
     ax.text(0.05, 0.70, 'State Rate = %3.2f%%'%(efficient_state_rate*100) + '; Local Tax = ${:,}'.format(local_tax),
+            verticalalignment='bottom', horizontalalignment='left',
+            transform=ax.transAxes,
+            color='red', fontsize=10)
+    ax.text(0.05, 0.65, 'Joint = %s'%(joint),
             verticalalignment='bottom', horizontalalignment='left',
             transform=ax.transAxes,
             color='red', fontsize=10)
